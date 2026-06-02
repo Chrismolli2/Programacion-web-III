@@ -1,0 +1,33 @@
+//ejercicio3 GET/Categorias/id
+app.get("/categorias/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const [categorias] = await conexion.query(
+      "SELECT * FROM categorias WHERE id = ?",
+      [id]
+    );
+
+    if (categorias.length === 0) {
+      return res.status(404).json({
+        mensaje: "Categoría no encontrada"
+      });
+    }
+
+    const [productos] = await conexion.query(
+      "SELECT * FROM productos WHERE categoria_id = ?",
+      [id]
+    );
+
+    res.json({
+      categoria: categorias[0],
+      productos: productos
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error al obtener la categoría",
+      error: error.message
+    });
+  }
+});
