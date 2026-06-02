@@ -1,3 +1,4 @@
+//ejercicio2 GET/categorias
 app.get("/categorias", async (req, res) => {
   try {
     const [categorias] = await conexion.query("SELECT * FROM categorias");
