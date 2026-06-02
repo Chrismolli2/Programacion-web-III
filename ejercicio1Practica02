@@ -1,0 +1,30 @@
+// ejercicio 1 POST categorias
+app.post("/categorias", async (req, res) => {
+  try {
+    const { nombre, descripcion } = req.body;
+
+    if (!nombre) {
+      return res.status(400).json({
+        mensaje: "El nombre es obligatorio"
+      });
+    }
+
+    const [resultado] = await conexion.query(
+      "INSERT INTO categorias (nombre, descripcion) VALUES (?, ?)",
+      [nombre, descripcion]
+    );
+
+    res.status(201).json({
+      mensaje: "Categoría registrada correctamente",
+      id: resultado.insertId,
+      nombre,
+      descripcion
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      mensaje: "Error al registrar la categoría",
+      error: error.message
+    });
+  }
+});
